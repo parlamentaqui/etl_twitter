@@ -95,7 +95,6 @@ def busca_historico_tweet_por_id():
     return r.json()
 
 
-
 # Atualiza o banco de dados do twitter, colocando o username em deputados que possuem uma conta verificada
 @api.route('/update_twitter_accounts')
 def update_twitter_accounts():
@@ -183,7 +182,7 @@ def update_tweets():
                 deputy.last_activity_date = new_tweet.date
                 deputy.save()
 
-    return "Updated tweets sucessfully. Now use /get_tweets to see the tweets"
+    return "Updated tweets sucessfully. Now use /get_all_tweets to see the tweets"
 
 # Pega parâmetros de informações que serão trazidas dos tweets (versao dessa rota)
 def get_params_2():
@@ -207,6 +206,17 @@ def index():
 
     return jsonify(tweets)
 
+# Rota para pegar Tweets por id de Deputado
+@api.route('/get_tweets_id_deputy/<deputy_id>')
+def get_tweets_id_deputy(deputy_id):
+    deputy_tweets = []
+
+    for item in Tweet.objects:
+        if int(item.deputy_id) == int(deputy_id): 
+           deputy_tweets.append(item.to_json())
+    
+    return jsonify(deputy_tweets)
+   
 # Rota que deldeta todos os objetos Tweets salvos no BD
 @api.route('/delete_all_tweets')
 def delete_all_tweets():    
